@@ -1,20 +1,27 @@
 // User function template for C++
 
 class Solution {
-  public:
+public:
     bool isProduct(vector<int> arr, long long x) {
-        // code here
         int n = arr.size();
-        if (n<2) return false;
-        std::sort(arr.begin(), arr.end());
-        int i=0, j=n-1;
-        if ((1ll*arr[j]*arr[j-1])<x) return false;
-        if ((1ll*arr[i]*arr[i+1])>x) return false;
-        while(i<j){
-            if ((1ll*arr[i]*arr[j])==x) return true;
-            else if ((1ll*arr[i]*arr[j])<x) i++;
-            else j--;
-            
+        if (n < 2) return false;
+        int zero = 0;
+        std::map<long long, int> freq;
+
+        for (int i = 0; i < n; i++) {
+            if (arr[i] == 0) zero++;
+            freq[arr[i]]++;
+        }
+
+        if (x == 0 && zero >= 1) return true;
+
+        for (auto it = freq.begin(); it != freq.end(); it++) {
+            long long a = it->first;
+            if (a == 0) continue;
+            if (x % a != 0) continue;
+            long long b = x / a;
+            if (a == b && freq[a] >= 2) return true;
+            if (a != b && freq.count(b)) return true;
         }
         return false;
     }
